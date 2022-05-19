@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class Main {
 
@@ -15,17 +16,13 @@ public class Main {
     private static final String CHARACTERISTICS = "characteristics:";
     private static final String POSTID = "postId:";
 
-
-    private static String pathFail = "E:\\java_projects\\CardName\\src\\main\\resources\\fileAuthentication";
-
     public static void main(String[] args) {
-        if ((args.length < 1)||(args.length > 1)) {
+        if (args.length != 1) {
             throw new IllegalArgumentException("Incorrect number of arguments");
         }
-        pathFail = args[0];
 
         doPost();
-        List<StringBuilder> file = Main.read(new File(pathFail));
+        List<StringBuilder> file = Main.read(new File(args[0]));
         List<Employee> employees = Main.parse(file);
         print(employees);
     }
@@ -43,10 +40,9 @@ public class Main {
             while(scanner.hasNext()){
                 line.append(scanner.nextLine());
                 if(line.isEmpty()){
-                    buffer.add(new StringBuilder(card));
-                    card.delete(0,card.length());
+                    buffer.add(card);
+                    card = new StringBuilder();
                 }
-//                line.compareTo(new StringBuilder("")) == 0
                 else{
                     card.append(line.append(" "));
                 }
@@ -87,10 +83,18 @@ public class Main {
     }
 
     public static void print(List<Employee> employees){
+
+        employees.sort(Comparator.comparing(Employee::getLastName).thenComparing(Comparator.comparing(Employee::getFirstName)));
+
         for (Employee employee : employees){
+
+            employee.setCharacteristics(employee.getCharacteristics().stream().sorted().collect(Collectors.toList()));
+
             System.out.println("First Name - " + employee.getFirstName());
             System.out.println("Last Name - " + employee.getLastName());
-            System.out.println("Description - " + employee.getDescription());
+            if(employee.getDescription() != ""){
+                System.out.println("Description - " + employee.getDescription());
+            }
             System.out.println("Characteristics -" + String.join(", ",employee.getCharacteristics()));
             System.out.println("Post - " + employee.getPost().getName());
             System.out.println();
