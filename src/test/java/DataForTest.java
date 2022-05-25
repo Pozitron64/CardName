@@ -1,15 +1,37 @@
+import model.Employee;
+import model.Post;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class DataForTest {
-    public static List<StringBuilder> stringsFromFile = List.of(
-            new StringBuilder("firstName: Геннадий " +
-                    "lastName: Кузьмин " +
-                    "description: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sit amet dictum felis, eu fringilla eros. Sed et gravida neque. Nullam at egestas erat. Mauris vitae convallis nulla. Aenean condimentum lectus magna. Suspendisse viverra quam non ante pellentesque, a euismod nunc dapibus. Duis sed congue erat " +
-                    "characteristics: honest, introvert, like criticism, love of Learning, pragmatism " +
-                    "postId: 854ef89d-6c27-4635-926d-894d76a81707 "),
-            new StringBuilder("firstName: Иван " +
-                    "lastName: Иванов " +
-                    "description: " +
-                    "characteristics: some characteristic " +
-                    "postId: 762d15a5-3bc9-43ef-ae96-02a680a557d0 "));
+
+    public static List<Employee> employees = new ArrayList<>(List.of(
+            new Employee("Генадий",
+                    "Кузьмин",
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sitamet dictum felis, eu fringilla eros. Sed et gravida neque. Nullam at egestas erat. Mauris vitae convallis nulla. Aenean condimentum lectus magna. Suspendisse viverra quam non ante pellentesque, a euismod nunc dapibus. Duis sed congue erat",
+                    List.of("honest","introvert","like criticism","love of Learning","pragmatism"),
+                    new Post(UUID.fromString("762d15a5-3bc9-43ef-ae96-02a680a557d0"),"Middle")),
+            new Employee("Иван",
+                    "Иванов",
+                    "",
+                    List.of("some characteristics"),
+                    new Post(UUID.fromString("854ef89d-6c27-4635-926d-894d76a81707"), "Programmer"))
+    ));
+    public static List<Employee> employee1 = new ArrayList<>(List.of(
+            new Employee("Генадий",
+                    "Кузьмин",
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sitamet dictum felis, eu fringilla eros. Sed et gravida neque. Nullam at egestas erat. Mauris vitae convallis nulla. Aenean condimentum lectus magna. Suspendisse viverra quam non ante pellentesque, a euismod nunc dapibus. Duis sed congue erat",
+                    List.of("honest","introvert","like criticism","love of Learning","pragmatism"),
+                    new Post(UUID.fromString("762d15a5-3bc9-43ef-ae96-02a680a557d0"),"Middle"))
+    ));
+    public static List<Employee> employee2 = new ArrayList<>(List.of(
+            new Employee("Иван",
+                    "Иванов",
+                    "",
+                    List.of("some characteristics"),
+                    new Post(UUID.fromString("854ef89d-6c27-4635-926d-894d76a81707"), "Programmer"))
+    ));
+
 }

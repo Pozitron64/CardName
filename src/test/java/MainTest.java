@@ -1,32 +1,46 @@
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import model.SearchParams;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.junit.Assert;
+import org.junit.Test;
+import service.EmployeeService;
+import service.FileService;
+import service.PostService;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Stream;
 
-class MainTest {
+public class MainTest {
 
     @Test
-    void checkCorrectReadFile() {
-        File file = new File("src\\main\\resources\\fileAuthentication");
-        List<StringBuilder> actual = Main.read(file);
-        Assertions.assertEquals(DataForTest.stringsFromFile.get(1).toString() + DataForTest.stringsFromFile.get(0).toString(),
-                actual.get(1).toString() + actual.get(0).toString());
+    public void checkParseArgs() {
+        SearchParams searchParam = new SearchParams();
+        String[] args = {"-file","src/main/resources/authentification.json","-firstname","Генадий","-lastname","Кузьмин"};
+        Main.parseArgs(args, searchParam);
+        Assert.assertTrue(("src/main/resources/authentification.json" == searchParam.getFilePath())
+                ||("Генадий" == searchParam.getFirstName())
+                ||("Кузьмин" == searchParam.getLastName())
+                ||(searchParam.getPostId() == null));
     }
 
     @Test
-    void correctParse() {
-        Main.doPost();
-        Employee expected = new Employee("Геннадий",
-                "Кузьмин",
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sitamet dictum felis, eu fringilla eros. Sed et gravida neque. Nullam at egestas erat. Mauris vitae convallis nulla. Aenean condimentum lectus magna. Suspendisse viverra quam non ante pellentesque, a euismod nunc dapibus. Duis sed congue erat",
-                new ArrayList<>(List.of(" honest, introvert, like criticism, love of Learning, pragmatism".split(", "))),
-                new Post(UUID.fromString("854ef89d-6c27-4635-926d-894d76a81707"),"Programmer"));
+    public void checkSearching(){
+        String[] testArgs = {"-file","src/main/resources/authentification.json","-firstname","Генадий"};
 
-        List<Employee> actual = Main.parse(DataForTest.stringsFromFile);
-        Assertions.assertTrue(expected.equals(actual.get(0)));
+        SearchParams searchParam = new SearchParams();
+        PostService postService = new PostService();
+        EmployeeService employeeService = new EmployeeService(postService);
+        FileService fileService = new FileService();
+
+        Main.parseArgs(testArgs, searchParam);
+        postService.doPost();
+
+        File file = new File(searchParam.getFilePath());
+        JSONArray array = fileService.readJsonArray(file);
+        array.forEach(e -> {
+            employeeService.parseFromJson((JSONObject) e);
+        });
+
+        Assert.assertArrayEquals(employeeService.getEmployees(searchParam).toArray(),DataForTest.employee1.toArray());
     }
+
 }
