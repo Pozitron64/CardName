@@ -12,13 +12,12 @@ public class Main {
     private static SearchParams searchParam = new SearchParams();
 
     public static void main(String[] args) {
-        String[] kon = {"-file","src/main/resources/authentification.json","-firstname","Генадий","-lastname","Кузьмин"};
 
         PostService postService = new PostService();
         EmployeeService employeeService = new EmployeeService(postService);
         FileService fileService = new FileService();
 
-        parseArgs(kon, searchParam);
+        parseArgs(args, searchParam);
         postService.doPost();
 
         File file = new File(searchParam.getFilePath());
